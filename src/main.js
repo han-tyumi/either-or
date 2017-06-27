@@ -5,6 +5,7 @@ import App from './App'
 import store from './store'
 import router from './router'
 import Firebase from 'firebase'
+import Vuelidate from 'vuelidate'
 import { sync } from 'vuex-router-sync'
 
 // sync router to vuex store
@@ -14,6 +15,9 @@ sync(store, router)
 Firebase.auth().signInAnonymously().catch((error) => {
   console.log(`${error.code} - ${error.message}`)
 })
+
+// add form validation
+Vue.use(Vuelidate)
 
 Vue.config.productionTip = false
 

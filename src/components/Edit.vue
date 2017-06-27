@@ -6,14 +6,16 @@
       <div class="field">
         <label class="label">Title</label>
         <p class="control">
-          <input v-model="title" class="input" type="text" placeholder="Title your collection">
+          <input v-model.trim="title" class="input" :class="{ 'is-danger': $v.title.$error }" @blur="$v.title.$touch()" type="text" placeholder="Title your collection">
         </p>
+        <p class="help is-danger" v-if="$v.title.$error">A title is required</p>
       </div>
       <div class="field">
         <label class="label">Items</label>
         <p class="control">
-          <textarea v-model="input" class="textarea" placeholder="Enter on separate lines" rows="5"></textarea>
+          <textarea v-model.trim="input" class="textarea" :class="{ 'is-danger': $v.input.$error }" @blur="$v.input.$touch()" placeholder="Enter on separate lines" rows="5"></textarea>
         </p>
+        <p class="help is-danger" v-if="$v.input.$error">A collection must contain at least two items</p>
       </div>
       <div class="field">
         <label class="label">Privacy</label>
@@ -41,6 +43,8 @@
 </template>
 
 <script>
+import _ from 'lodash'
+import { required } from 'vuelidate/lib/validators'
 import { mapGetters, mapActions } from 'vuex'
 
 export default {
@@ -64,14 +68,27 @@ export default {
       set (value) { this.$store.commit('setPrivacy', value) }
     }
   },
+  validations: {
+    title: {
+      required
+    },
+    input: {
+      required,
+      lines: (value) => {
+        return _.compact(value.split('\n')).length >= 2
+      }
+    }
+  },
   methods: {
     ...mapActions([
       'updateCollection'
     ]),
     update () {
-      this.updateCollection().then((key) => {
-        this.$router.push({ name: 'rankings', params: { id: key } })
-      })
+      if (!this.$v.$invalid) {
+        this.updateCollection().then((key) => {
+          this.$router.push({ name: 'rankings', params: { id: key } })
+        })
+      }
     }
   }
 }

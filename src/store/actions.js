@@ -126,8 +126,10 @@ export default {
           snapshot.forEach((snapshot) => {
             collectionsRef.child(snapshot.key).on('value', (snapshot) => {
               let collection = snapshot.val()
-              collection['.key'] = snapshot.key
-              commit('updateUserCollections', [collection])
+              if (collection) {
+                collection['.key'] = snapshot.key
+                commit('updateUserCollections', [collection])
+              }
             })
           })
           resolve(getters.id)

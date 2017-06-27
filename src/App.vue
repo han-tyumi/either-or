@@ -18,7 +18,7 @@
         </span>
         <div class="nav-right nav-menu">
           <router-link to="/new" class="nav-item is-tab is-hidden-tablet">New</router-link>
-          <router-link :to="{ name: 'edit', props: { id: id }}" v-if="id" class="nav-item is-tab is-hidden-tablet">Edit</router-link>
+          <router-link :to="{ name: 'edit', props: { id: id }}" v-if="canEdit" class="nav-item is-tab is-hidden-tablet">Edit</router-link>
           <router-link :to="{ name: 'vote', props: { id: id }}" v-if="id" class="nav-item is-tab is-hidden-tablet">Vote</router-link>
           <router-link :to="{ name: 'rankings', props: { id: id }}" v-if="id" class="nav-item is-tab is-hidden-tablet">Rankings</router-link>
         </div>

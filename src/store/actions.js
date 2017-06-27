@@ -120,7 +120,11 @@ export default {
 
   bindCollections: firebaseAction(({ getters, bindFirebaseRef, commit }) => {
     return new Promise((resolve, reject) => {
-      bindFirebaseRef('collections', collectionsRef.orderByChild('privacy').equalTo('public'))
+      bindFirebaseRef('collections', collectionsRef.orderByChild('privacy').equalTo('public'), {
+        cancelCallback (error) {
+          console.dir(error)
+        }
+      })
       Firebase.auth().onAuthStateChanged((user) => {
         accessRef.child(user.uid).on('value', (snapshot) => {
           snapshot.forEach((snapshot) => {
@@ -147,7 +151,8 @@ export default {
             commit('setPrivacy', getters.collection.privacy)
             done ? resolve(getters.id) : done = true
           },
-          cancelCallback () {
+          cancelCallback (error) {
+            console.dir(error)
             done ? resolve(null) : done = true
           }
         })
@@ -156,7 +161,8 @@ export default {
             commit('setInput', _.join(_.map(getters.items, 'name'), '\n'))
             done ? resolve(getters.id) : done = true
           },
-          cancelCallback () {
+          cancelCallback (error) {
+            console.dir(error)
             done ? resolve(null) : done = true
           }
         })

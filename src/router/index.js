@@ -36,6 +36,7 @@ export default new Router({
       component: Vote
     }
   ],
+  base: '/either-or/',
   mode: 'history',
   linkExactActiveClass: 'is-active'
 })

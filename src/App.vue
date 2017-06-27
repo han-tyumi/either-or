@@ -27,6 +27,13 @@
     <main class="section">
       <router-view></router-view>
     </main>
+    <footer class="footer">
+      <div class="container">
+        <div class="content has-text-centered">
+          <p>Made with lots of love and lines of code<br>&copy; 2017 Matt Champagne</p>
+        </div>
+      </div>
+    </footer>
   </div>
 </template>
 
@@ -80,13 +87,13 @@ export default {
 <style src="bulma/css/bulma.css"></style>
 <style src="font-awesome/css/font-awesome.min.css"></style>
 <style>
-body {
+#app {
   display: flex;
   min-height: 100vh;
   flex-direction: column;
 }
 
-#app {
+main {
   flex: 1 0 auto;
 }
 

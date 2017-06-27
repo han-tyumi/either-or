@@ -10,8 +10,8 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="item in items">
-          <th>{{ item.rank }}</th><td>{{ item.name }}</td>
+        <tr v-for="item in items" :key="item['.key']">
+          <th>{{ item.name }}</th><td>{{ item.votes }}</td>
         </tr>
       </tbody>
     </table>
@@ -19,12 +19,14 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'rankings',
   computed: {
-    ...mapState(['items'])
+    ...mapGetters({
+      items: 'sortedItems'
+    })
   }
 }
 </script>

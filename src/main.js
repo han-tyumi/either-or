@@ -6,20 +6,16 @@ import store from './store'
 import router from './router'
 import Firebase from 'firebase'
 import { sync } from 'vuex-router-sync'
-import { mapActions } from 'vuex'
 
 // sync router to vuex store
 sync(store, router)
-
-Vue.config.productionTip = false
-
-// connect to database
-let db = Firebase.database()
 
 // authenticate user anonymously
 Firebase.auth().signInAnonymously().catch((error) => {
   console.log(`${error.code} - ${error.message}`)
 })
+
+Vue.config.productionTip = false
 
 /* eslint-disable no-new */
 new Vue({
@@ -27,13 +23,5 @@ new Vue({
   store,
   router,
   template: '<App/>',
-  components: { App },
-  methods: {
-    ...mapActions([
-      'setCollectionsRef'
-    ])
-  },
-  created () {
-    this.setCollectionsRef(db.ref('collections'))
-  }
+  components: { App }
 })

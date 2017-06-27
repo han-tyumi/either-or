@@ -1,7 +1,8 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Collections from '@/components/Collections'
-import Settings from '@/components/Settings'
+import New from '@/components/New'
+import Edit from '@/components/Edit'
 import Vote from '@/components/Vote'
 import Rankings from '@/components/Rankings'
 
@@ -17,31 +18,22 @@ export default new Router({
     {
       path: '/new',
       name: 'new',
-      component: Settings
+      component: New
     },
     {
       path: '/:id',
-      name: 'collection',
-      redirect: ':id/settings',
-      props: true
+      name: 'rankings',
+      component: Rankings
     },
     {
-      path: '/:id/settings',
-      name: 'settings',
-      component: Settings,
-      props: true
+      path: '/:id/edit',
+      name: 'edit',
+      component: Edit
     },
     {
       path: '/:id/vote',
       name: 'vote',
-      component: Vote,
-      props: true
-    },
-    {
-      path: '/:id/rankings',
-      name: 'rankings',
-      component: Rankings,
-      props: true
+      component: Vote
     }
   ],
   mode: 'history',

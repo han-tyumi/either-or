@@ -7,7 +7,7 @@
             <h1 class="title">either-or</h1>
           </router-link>
           <router-link to="/new" class="nav-item is-tab is-hidden-mobile">New</router-link>
-          <router-link :to="{ name: 'settings', props: { id: id }}" v-if="id" class="nav-item is-tab is-hidden-mobile">Settings</router-link>
+          <router-link :to="{ name: 'edit', props: { id: id }}" v-if="canEdit" class="nav-item is-tab is-hidden-mobile">Edit</router-link>
           <router-link :to="{ name: 'vote', props: { id: id }}" v-if="id" class="nav-item is-tab is-hidden-mobile">Vote</router-link>
           <router-link :to="{ name: 'rankings', props: { id: id }}" v-if="id" class="nav-item is-tab is-hidden-mobile">Rankings</router-link>
         </div>
@@ -17,24 +17,63 @@
           <span></span>
         </span>
         <div class="nav-right nav-menu">
-          <router-link to="/collections" class="nav-item is-tab is-hidden-tablet">Collections</router-link>
-          <router-link to="/" class="nav-item is-tab is-hidden-tablet">Items</router-link>
-          <router-link to="/vote" class="nav-item is-tab is-hidden-tablet">Vote</router-link>
-          <router-link to="/rankings" class="nav-item is-tab is-hidden-tablet">Rankings</router-link>
+          <router-link to="/new" class="nav-item is-tab is-hidden-tablet">New</router-link>
+          <router-link :to="{ name: 'edit', props: { id: id }}" v-if="id" class="nav-item is-tab is-hidden-tablet">Edit</router-link>
+          <router-link :to="{ name: 'vote', props: { id: id }}" v-if="id" class="nav-item is-tab is-hidden-tablet">Vote</router-link>
+          <router-link :to="{ name: 'rankings', props: { id: id }}" v-if="id" class="nav-item is-tab is-hidden-tablet">Rankings</router-link>
         </div>
       </div>
     </nav>
     <main class="section">
-      <transition name="fade" mode="out-in">
-        <router-view></router-view>
-      </transition>
+      <router-view></router-view>
     </main>
   </div>
 </template>
 
 <script>
+import { mapGetters, mapActions } from 'vuex'
+
 export default {
-  props: ['id']
+  computed: {
+    ...mapGetters([
+      'id',
+      'canEdit',
+      'exists',
+      'items'
+    ])
+  },
+  methods: {
+    ...mapActions([
+      'bindCollections',
+      'bindCollection',
+      'generateCombinations'
+    ])
+  },
+  watch: {
+    id () {
+      this.bindCollection().then(() => {
+        if (!this.exists) {
+          this.$router.push('/')
+        }
+      })
+    },
+    items () {
+      this.generateCombinations()
+    }
+  },
+  created () {
+    this.bindCollections().then((id) => {
+      if (this.id) {
+        this.bindCollection().then((id) => {
+          if (!this.exists) {
+            this.$router.push('/')
+          } else if (this.$route.name === 'edit' && !this.canEdit) {
+            this.$router.push({ name: 'rankings', params: { id: id } })
+          }
+        })
+      }
+    })
+  }
 }
 </script>
 
@@ -49,5 +88,10 @@ body {
 
 #app {
   flex: 1 0 auto;
+}
+
+textarea, .textarea {
+  min-height: inherit;
+  height: auto;
 }
 </style>

@@ -11,8 +11,11 @@ const debug = process.env.NODE_ENV !== 'production'
 export default new Vuex.Store({
   state: {
     collections: [],
+    userCollections: [],
+    collection: {},
     title: '',
     input: '',
+    privacy: '',
     items: [],
     combinations: [],
     index: 0

@@ -141,15 +141,25 @@ export default {
     return new Promise((resolve, reject) => {
       if (getters.id) {
         let done = false
-        bindFirebaseRef('collection', collectionsRef.child(getters.id), { readyCallback () {
-          commit('setTitle', getters.collection.title)
-          commit('setPrivacy', getters.collection.privacy)
-          done ? resolve(getters.id) : done = true
-        }})
-        bindFirebaseRef('items', itemsRef.child(getters.id), { readyCallback () {
-          commit('setInput', _.join(_.map(getters.items, 'name'), '\n'))
-          done ? resolve(getters.id) : done = true
-        }})
+        bindFirebaseRef('collection', collectionsRef.child(getters.id), {
+          readyCallback () {
+            commit('setTitle', getters.collection.title)
+            commit('setPrivacy', getters.collection.privacy)
+            done ? resolve(getters.id) : done = true
+          },
+          cancelCallback () {
+            done ? resolve(null) : done = true
+          }
+        })
+        bindFirebaseRef('items', itemsRef.child(getters.id), {
+          readyCallback () {
+            commit('setInput', _.join(_.map(getters.items, 'name'), '\n'))
+            done ? resolve(getters.id) : done = true
+          },
+          cancelCallback () {
+            done ? resolve(null) : done = true
+          }
+        })
       } else {
         unbindFirebaseRef('collection')
         commit('setCollection', {})
